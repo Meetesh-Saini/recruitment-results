@@ -1,5 +1,6 @@
 /*
  written by: Lawrence McDaniel
+ Modified by: Meetesh Saini (8 Sep, 2023)
 
  This is a refactored implementation of the Matrix Raining Letters effect based on this blog post
  https://dev.to/javascriptacademy/matrix-raining-code-effect-using-javascript-4hep
@@ -77,7 +78,6 @@ const renderMatrix = (
 const MatrixRainingLetters: React.FC<MatrixRainingLettersProps> = (props) => {
     const ref = useRef<HTMLCanvasElement>(null);
     const keyName = "mrl-" + props.keyName;
-    const [first, setFirst] = useState(true);
     const [interval, setIntervalState] = useState(setInterval(() => { }, 30));
 
     const thisClassName = "mrl-container " + props.custom_class;

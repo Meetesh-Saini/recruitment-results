@@ -6,21 +6,30 @@
 
 
 */
-import React from "react";
+import React, { useState } from "react";
 import { useRef } from "react";
 import { useEffect } from "react";
 
 import "./styles.css";
 
-type MatrixRainingLettersProps = { key: string | null, custom_class: string | null, color: string };
+type MatrixRainingLettersProps = { keyName: string | null, custom_class: string | null, color: string };
 
-const renderMatrix = (ref: React.RefObject<HTMLCanvasElement>, color: string) => {
+const renderMatrix = (
+    ref: React.RefObject<HTMLCanvasElement>,
+    color: string,
+    interval: number,
+    setIntervalState: React.Dispatch<React.SetStateAction<number>>
+) => {
     let canvas = ref.current;
     if (!canvas) return;
     let context = canvas.getContext("2d");
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+
+    if (context) {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+    }
 
     const katakana =
         "アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン";
@@ -38,11 +47,10 @@ const renderMatrix = (ref: React.RefObject<HTMLCanvasElement>, color: string) =>
     }
 
     const render = () => {
-        if (!context || !canvas) return;
+        if (!context || !canvas || !interval) return;
         context.fillStyle = "rgba(0, 0, 0, 0.05)"; // black w a tiny bit of alpha
         context.fillRect(0, 0, canvas.width, canvas.height);
-
-        context.fillStyle = color; // pure green
+        context.fillStyle = color;
         context.font = fontSize + "px monospace";
 
         for (let i = 0; i < rainDrops.length; i++) {
@@ -62,16 +70,22 @@ const renderMatrix = (ref: React.RefObject<HTMLCanvasElement>, color: string) =>
         }
     };
 
-    return () => {
-        setInterval(render, 30);
-    };
+    clearInterval(interval);
+    setIntervalState(setInterval(render, 30));
 };
 
 const MatrixRainingLetters: React.FC<MatrixRainingLettersProps> = (props) => {
     const ref = useRef<HTMLCanvasElement>(null);
-    const keyName = "mrl-" + props.key;
+    const keyName = "mrl-" + props.keyName;
+    const [first, setFirst] = useState(true);
+    const [interval, setIntervalState] = useState(setInterval(() => { }, 30));
+
     const thisClassName = "mrl-container " + props.custom_class;
-    useEffect(() => renderMatrix(ref, props.color), [props.color]);
+    useEffect(() => {
+        if (ref.current) {
+            return renderMatrix(ref, props.color, interval, setIntervalState);
+        }
+    }, [ref, props.color]);
 
     return (
         <React.Fragment>

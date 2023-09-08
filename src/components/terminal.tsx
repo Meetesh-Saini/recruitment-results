@@ -3,10 +3,13 @@ import { ReactTerminal } from "react-terminal";
 import ExploitOutput from "./exploit_output";
 
 function Terminal() {
+    const [inp, setInp] = useState(true);
+
     const commands = {
         whoami: "lugvitc",
         cd: (directory: string) => `changed path to ${directory}`,
         exploit: () => {
+            setInp(false);
             return <ExploitOutput />
         },
     };
@@ -23,6 +26,7 @@ function Terminal() {
             welcomeMessage={welcomeMessage}
             commands={commands}
             theme="material-ocean"
+            enableInput={inp}
         />
     );
 }

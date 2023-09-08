@@ -1,11 +1,15 @@
 /** @type {import('tailwindcss').Config} */
 export default {
     content: [
-      "./index.html",
-      "./src/**/*.{js,ts,jsx,tsx}",
+        "./index.html",
+        "./src/**/*.{js,ts,jsx,tsx}",
     ],
     theme: {
-      extend: {},
+        extend: {
+            height: {
+                "terminal": "min(500px, 75vh)",
+            },
+        },
     },
     plugins: [],
-  }
+}
